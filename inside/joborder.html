@@ -1,0 +1,145 @@
+<div id="header_nav"></div>
+	<div id="breadcrumbs">
+		<div class="container">
+			<ul>
+				<li><a href="#">Home</a></li>
+				<li>Joborder</li>
+			</ul>
+		</div>
+		<!-- / container -->
+	</div>
+	<!-- / body -->
+
+	<div id="body">
+		<div class="container">
+			<div id="content" class="formjoborder">
+			<h3>Job Order Form</h3>
+			<label>Name : </label>
+				<input type="text" id="name"><br>
+			<label>Address : </label>
+				<input type="text"        id="address"><br>
+			<label>Date :</label>
+				<input type="date"        id="date"><br>
+			<label>Amount :</label>	
+				<input type="text"        id="amount"><br>
+			<label>Description :</label>	
+			    <textarea id="description"  ></textarea><br>
+			<label>Deposit :</label>	
+				<input type="text"       id="deposit"><br>
+			<label>Balance :</label>	
+				<input type="text"    id="balance"><br>
+			<label>Conform :</label>	
+
+				<input type="text"     id="conform"><br>
+			<label>Recieved By :</label>	
+
+				<input type="text"   id="recievedby"><br>
+			<label>Claimed By :</label>	
+
+				<input type="text"   id="claimedby"><br>
+			<button type="submit" style="width:150px;padding:10px;color:#fff;background:#999;" onclick="saveOrder()">Submit</button>
+
+			</div>
+			<!-- / content -->
+
+			<div id="content">
+					<div id="fb-data">
+						
+					</div>
+			</div>
+		</div>
+		<!-- / container -->
+	</div>
+	<!-- / body -->
+
+
+
+	
+
+
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script>window.jQuery || document.write("<script src='js/jquery-1.11.1.min.js'>\x3C/script>")</script>
+	<script src="js/plugins.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/custom.js"></script>
+
+		<script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+		<script>
+		  // Initialize Firebase
+		  var config = {
+		    apiKey: "AIzaSyBIsrdde_eUPHl-3sth--wl_ZqLXEsx7RU",
+		    authDomain: "jewelry-b53bc.firebaseapp.com",
+		    databaseURL: "https://jewelry-b53bc.firebaseio.com",
+		    storageBucket: "jewelry-b53bc.appspot.com",
+		    messagingSenderId: "829770664880"
+		  };
+		  firebase.initializeApp(config);
+		</script>
+
+		<script type="text/javascript">
+
+		function getJobOrders()
+		{
+			   var query = firebase.database().ref("joborders").orderByKey();
+                query.once("value")
+                  .then(function(snapshot) {
+                  	var content = "<table><tr><th>Name</th><th>Address</th><th>Date</th><th>Amount</th><th>Description</th><th>Deposit</th><th>Conform</th><th>Recieved by</th><th>Claimed by</th></tr>";
+                    snapshot.forEach(function(childSnapshot) {
+                      var key = childSnapshot.key;
+                      var childData = childSnapshot.val();
+	                  		content += "<tr>";
+	                  	    content += "<td>"+childData.name+"</td>";
+	                  	    content += "<td>"+childData.address+"</td>";
+	                  	    content += "<td>"+childData.date+"</td>";
+	                  	    content += "<td>"+childData.amount+"</td>";
+	                  	    content += "<td>"+childData.description+"</td>";
+	                  	    content += "<td>"+childData.deposit+"</td>";
+	                  	    content += "<td>"+childData.conform+"</td>";
+	                  	    content += "<td>"+childData.recievedby+"</td>";
+	                  	    content += "<td>"+childData.claimedby+"</td>";
+	                  	    content += "</tr>";
+
+	                });
+                    content += "</table>";
+                    $('#fb-data').html(content);
+                 });  
+		}
+		 
+		getJobOrders();
+
+            function saveOrder()
+            {
+            		var name = $('#name').val();
+            		var address = $('#address').val();
+            		var date = $('#date').val();
+            		var amount = $('#amount').val();
+            		var description = $('#description').val();
+            		var deposit = $('#deposit').val();
+            		var balance = $('#balance').val();
+            		var conform = $('#conform').val();
+            		var recievedby = $('#recievedby').val();
+            		var claimedby = $('#claimedby').val();
+            		
+            		
+   				   var db = firebase.database();
+			                var ref = db.ref("joborders");
+			                var newJo = ref.push();
+			                newJo.set({
+			                  name: name,
+			                  address: address,
+			                  date: date,
+			                  amount: amount,
+			                  description: description,
+			                  deposit: deposit,
+			                  balance: balance,
+			                  conform: conform,
+			                  recievedby: recievedby,
+			                  claimedby: claimedby
+			                });
+			        	getJobOrders();        
+            }
+
+		</script>
+
+</body>
+</html>
