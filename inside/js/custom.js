@@ -1,1 +1,0 @@
-$( "#header_nav" ).load( "layouts/header.html" );
